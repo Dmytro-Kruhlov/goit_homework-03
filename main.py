@@ -19,32 +19,39 @@ users = [
     {'name': 'Natasha', 'birthday': datetime.datetime(2023, 6, 11)},
     {'name': 'Natasha', 'birthday': datetime.datetime(2023, 6, 10)},
 ]
-today = datetime.datetime.today().date()
-print(today)
 
-nearest_saturday = today + datetime.timedelta(5 - today.weekday())
-print(nearest_saturday)
-friday_after_saturday = nearest_saturday + datetime.timedelta(days=6)
-print(friday_after_saturday)
+def main(users):
+    today = datetime.datetime.today().date()
+    nearest_saturday = today + datetime.timedelta(5 - today.weekday())
+    friday_after_saturday = nearest_saturday + datetime.timedelta(days=6)
+    birthdays_next_week = get_birthday_next_week(users, nearest_saturday, friday_after_saturday)
+    return birthdays_next_week
 
-birthdays_this_week = {}
+def get_birthday_next_week(users, nearest_saturday, friday_after_saturday):
+    birthdays_this_week = {}
 
-for user in users:
-    name = user["name"]
-    birthday = user["birthday"].date()
-    
-    if nearest_saturday <= birthday <= friday_after_saturday:
-        if birthday.weekday() == 5:
-            birthday += datetime.timedelta(days=2)
-        if birthday.weekday() == 6:
-            birthday += datetime.timedelta(days=1)
-         
-        if birthday not in birthdays_this_week:
-         
-            birthdays_this_week[birthday] = []
-        birthdays_this_week[birthday].append(name)
+    for user in users:
+        name = user["name"]
+        birthday = user["birthday"].date()
+        
+        if nearest_saturday <= birthday <= friday_after_saturday:
+            if birthday.weekday() == 5:
+                birthday += datetime.timedelta(days=2)
+            if birthday.weekday() == 6:
+                birthday += datetime.timedelta(days=1)
+            
+            if birthday not in birthdays_this_week:
+            
+                birthdays_this_week[birthday] = []
+            birthdays_this_week[birthday].append(name)
+    return birthdays_this_week
 
-for birthday, names in birthdays_this_week.items():
-    weekday = birthday.strftime("%A")
-    names_str = ", ".join(names)
-    print(f"{weekday}: {names_str}")
+
+def print_birthdays(birthdays_this_week):
+    for birthday, names in birthdays_this_week.items():
+        weekday = birthday.strftime("%A")
+        names_str = ", ".join(names)
+        print(f"{weekday}: {names_str}")
+
+birthday_dict = main(users)
+print_birthdays(birthday_dict)
